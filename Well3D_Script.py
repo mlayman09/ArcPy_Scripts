@@ -45,7 +45,6 @@ print arcpy.GetMessages()
 arcpy.AddField_management("points_elev","New_Depth","DOUBLE")
 print arcpy.GetMessages()
 
-##ADD CODE TO CHOOSE FIELD SO THAT YOU DON'T HARD CODE IT
 ##Calculate that field with the expression as seen in the code. Convert the rastervalu field to feet from meters, and subtract the true vertical depth
 arcpy.CalculateField_management("points_elev","New_Depth",'(!RASTERVALU!*3.28084) - !TVD!', "PYTHON")
 print arcpy.GetMessages()
@@ -54,7 +53,6 @@ print arcpy.GetMessages()
 arcpy.FeatureTo3DByAttribute_3d("points_elev","points_converted","New_Depth")
 print arcpy.GetMessages()
 
-####ADD CODE TO FIND A FIELD THAT CONTAINS "UWI" AND CHOOSE THAT ONE, SO THAT YOU DON'T HARD CODE FIELD NAMES"
 ##Convert the 3D points created in the tool above to 3D lines
 arcpy.PointsToLine_management("points_converted",output,UWI)
 print arcpy.GetMessages()
