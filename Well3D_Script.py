@@ -31,31 +31,19 @@ output = arcpy.GetParameterAsText(7)     ##the name for the output (3d line feat
 
 ##Plot the points from the CSV file
 arcpy.MakeXYEventLayer_management(inputCSV,xField,yField,"layer",prj)
-print arcpy.GetMessages()
-
-##Copy those features to a new file
-arcpy.CopyFeatures_management("layer","points")
-print arcpy.GetMessages()
+arcpy.CopyFeatures_management("layer","points") ##Copy those features to a new file
 
 ##For each point, get the elevation value from the DEM and add it to a field
 arcpy.sa.ExtractValuesToPoints("points",inputDEM,"points_elev")
-print arcpy.GetMessages()
-
-##Add a field ("New_Depth") to hold the values for the actual elevation of each point
-arcpy.AddField_management("points_elev","New_Depth","DOUBLE")
-print arcpy.GetMessages()
-
-##Calculate that field with the expression as seen in the code. Convert the rastervalu field to feet from meters, and subtract the true vertical depth
-arcpy.CalculateField_management("points_elev","New_Depth",'(!RASTERVALU!*3.28084) - !TVD!', "PYTHON")
-print arcpy.GetMessages()
+arcpy.AddField_management("points_elev","New_Depth","DOUBLE") ##Add a field ("New_Depth") to hold the values for the actual elevation of each point
+arcpy.CalculateField_management("points_elev","New_Depth",'(!RASTERVALU!*3.28084) - !TVD!', "PYTHON") ##Calculate that field with the expression as seen in the code. Convert the rastervalu field to feet from meters, and subtract the true vertical depth
 
 ##Make the "points_elev" file 3D by the "New_Depth" field
 arcpy.FeatureTo3DByAttribute_3d("points_elev","points_converted","New_Depth")
-print arcpy.GetMessages()
 
 ##Convert the 3D points created in the tool above to 3D lines
 arcpy.PointsToLine_management("points_converted",output,UWI)
-print arcpy.GetMessages()
+
 
 
 
